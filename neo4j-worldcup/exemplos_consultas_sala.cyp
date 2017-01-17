@@ -25,9 +25,47 @@ WHERE  rel > 1
 return copa,hosts
 
 
+//
+// CONSULTAS COMPLEXAS
+// Convocados da seleção Brasileira em 1994
+
+MATCH (p:Pais {nome: "Brazil"})-[:CONVOCOU]->(selecao),
+      (selecao)-[:PARA_A_COPA]->(copa)-[:REALIZADA_EM]->(ano {year: 1994}),
+      (selecao)<-[:JOGOU_POR]-(jogador)
+RETURN p, selecao, ano, copa, jogador
+
+//
+// Jogadores que não foram utilizados nas copas
+MATCH (a)-[:JOGOU_POR]->(b) 
+WHERE not (a-[:TITULAR|:RESERVA]->()) 
+RETURN b,count(a) 
+order by count(a) desc
 
 
+//TIMES QUE ESTIVERAM QUE HOSPEDARAM E FORAM PARA A FINAL
 
-// show the phases
-MATCH (p:Phase)
-RETURN p
+MATCH (fase:Fase {nome: "Final"})<-[:NA_FASE]-(partida),
+	   (copa:CopaDoMundo)-[:COMPOSTA_POR]->(partida),
+       (partida)<-[:JOGOU_EM]-(pais:Pais),
+	   (copa)-[:ORGANIZADA_POR]->(pais)
+RETURN pais.nome,partida.descricao,copa.nome
+//RETURN pais,partida,copa
+
+
+//PAISES QUE HOSPEDARAM A COPA E GANHARAM
+MATCH (fase:Fase {nome: "Final"})<-[:NA_FASE]-(partida),
+		(partida)-[rel:TIME_DA_CASA|TIME_VISITANTE]->(pais:Pais),
+		(copa:CopaDoMundo)-[:COMPOSTA_POR]->(partida),
+		(copa)-[:ORGANIZADA_POR]->(pais)
+WITH partida,copa,pais,rel,
+CASE WHEN TYPE(rel) = "TIME_DA_CASA"
+	THEN TOINT(partida.placar_casa) - TOINT(partida.placar_visitante)
+	ELSE TOINT(partida.placar_visitante) - TOINT(partida.placar_casa)
+    END AS resultado_partida
+WHERE resultado_partida > 0
+RETURN pais.nome,partida.descricao,copa.nome
+
+//
+// 
+
+
