@@ -1,1 +1,0 @@
-MATCH (n)-[r]-() DELETE n,r;
