@@ -1,5 +1,5 @@
 USING PERIODIC COMMIT 1000
-LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/thiagonobrega/BDOG/master/data/import/lineups.csv" AS csvLine
+LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/thiagonobrega/bdog/master/neo4j-worldcup/data/import/lineups.csv" AS csvLine
 
 MATCH (home)<-[:TIME_DA_CASA]-(match:Partida {id: csvLine.match_id})-[:TIME_VISITANTE]->(away)
 MATCH (player:Jogador {id: csvLine.player_id})

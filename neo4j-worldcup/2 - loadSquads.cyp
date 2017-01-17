@@ -1,5 +1,5 @@
 USING PERIODIC COMMIT 1000
-LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/thiagonobrega/BDOG/master/data/import/squads.csv" AS csvLine
+LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/thiagonobrega/bdog/master/neo4j-worldcup/data/import/squads.csv" AS csvLine
 
 MATCH (y:Ano {year: toInt(csvLine.year)})<-[:REALIZADA_EM]-(worldCup),
       (c:Pais {nome: csvLine.country})

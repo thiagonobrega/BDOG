@@ -1,5 +1,5 @@
 USING PERIODIC COMMIT 1000
-LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/thiagonobrega/BDOG/master/data/import/matches.csv" AS csvLine
+LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/thiagonobrega/bdog/master/neo4j-worldcup/data/import/matches.csv" AS csvLine
 
 WITH csvLine, toInt(csvLine.match_number) AS matchNumber 
 
