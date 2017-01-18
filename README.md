@@ -1,118 +1,84 @@
-World Cup 2014 with Neo4j
+Bancos de Dados Orientados a Grafos
 ==============
 
-We've built a Neo4j World Cup Graph which you can read more about at [worldcup.neo4j.org](http://worldcup.neo4j.org/). Instructions on getting it up and running locally are below.
+Material de apoio utilizado na disciplina de Bancos de Dados II do Curso de Ciência da Computação da UFCG.
+## Instalando o Neo4j 
+Baixe o Neo4J  do website (http://www.neo4j.org/download) e siga as instruções. Caso você ainda tenha alguma dúvida veja o vídeo abaixo
 
-## Starting Neo4j
+(https://www.youtube.com/watch?v=ANLZsH52kBA)
 
-The import of this data set uses LOAD CSV which was introduced in Neo4j 2.1.2 so you'll need to use that version.
+## Exemplo  
+Em sala de aula nos adaptamos os dados de  [Mark Needham]( https://github.com/mneedham), com os dados das Copas do Mundo.
 
-You can [download Neo4j 2.1.2](http://www.neo4j.org/download) from the Neo4j website.
+Os dados estão organizados de acordo com a Figura abaixo: 
+![tirinha](https://github.com/thiagonobrega/bdog/blob/master/neo4j-worldcup/imagens/esquema.png)
 
-###Mac / Unix
+### Carregando os dados na sua instancia Neo4J
+Abra o navegador e acessa o [console web](http://localhost:7474) do Neo4J
+#### Limpe a Base de Dados
 ````
-cd /path/to/where/you/installed/neo4j
-./bin/neo4j start
+MATCH (n)-[r]-() DELETE n,r;
 ````
-
-###Windows
-Launch Neo4j using the desktop application
-
-## Importing the data set
-
-### Mac / Unix (with command line skillz)
-
-Clone this repository
-
-Set the $WC_DB environment variable to the path to where you've installed Neo4j:
-
+#### Índices 
+Para que os dados sejam carregados e consultados mais rapidamente é bom criar alguns índices primeiro.
 ````
-export WC_DB="/path/to/where/you/installed/neo4j"
-````
-
-Run the [doit.sh](doit.sh) script to import all the data:
-
-````
-./doit.sh
-````
-
-### Windows / Not familiar with the command line
-
-Clear everything in the database and create indexes by running the following cypher statements in [Neo4j browser](http://localhost:7474)
-
-````
-MATCH n OPTIONAL MATCH (n)-[r]-() DELETE n,r;
+CREATE INDEX ON :Partida(id);
 ````
 
 ````
-CREATE INDEX ON :Match(id);
-```
-
-```
-CREATE INDEX ON :WorldCup(name);
+CREATE INDEX ON :CopaDoMundo(nome);
 ````
 
 ````
-CREATE INDEX ON :Stadium(stadium);
+CREATE INDEX ON :Estadio(nome);
 ````
 
 ````
-CREATE INDEX ON :Phase(phase);
+CREATE INDEX ON :Pais(nome);
 ````
 
 ````
-CREATE INDEX ON :Country(name);
+CREATE INDEX ON :Fase(nome);
 ````
 
 ````
-CREATE INDEX ON :Time(time);
+CREATE INDEX ON :Jogador(id);
 ````
 
 ````
-CREATE INDEX ON :MatchNumber(value);
+CREATE INDEX ON :Jogador(nome);
 ````
+Cada linha deve ser executada individualmente
+### Carregando os dados
+Execute os comandos dos arquivos abaixo no Neo4J.
 
+* [01 - Dados das Partidas](neo4j-worldcup/1-loadMatches.cyp)
+* [02 - Dados das Seleções](neo4j-worldcup/2-oadSquads.cyp)
+* [03 - Dados das Convocações](neo4j-worldcup/3-loadLineUps.cyp)
+* [04 - Dados dos eventos](neo4j-worldcup/4-loadEvents.cyp)
+IMPORTANTE : Para resolver os exercícios da Lista 02 é necessário executar a criação do relacionamento :VENCEU
 ````
-CREATE INDEX ON :Player(id);
+MATCH (visitante)<-[:TIME_VISITANTE]-(partida:Partida)-[:TIME_DA_CASA]->(tcasa)
+MATCH (partida)<-[:COMPOSTA_POR]-(copa)
+MATCH (copa)<-[:PARA_A_COPA]-(selecaoCasa)<-[:CONVOCOU]-(tcasa),
+      (copa)<-[:PARA_A_COPA]-(selecaoVisitante)<-[:CONVOCOU]-(visitante)
+ 
+FOREACH(n IN (CASE WHEN toInt(partida.placar_casa) > toInt(partida.placar_visitante) THEN [1] else [] END) |
+	MERGE (selecaoCasa)-[:VENCEU {placar: partida.placar_casa + "-" + partida.placar_visitante}]->(selecaoVisitante)
+)
+
+FOREACH(n IN (CASE WHEN toInt(partida.placar_visitante) > toInt(partida.placar_casa) THEN [1] else [] END) |
+	MERGE (selecaoVisitante)-[:VENCEU {placar: partida.placar_visitante + "-" + partida.placar_casa}]->(selecaoCasa)
+);
 ````
+## Exemplos de Sala de aula
 
-````
-CREATE INDEX ON :Player(name);
-````
+As consultas utilizadas em sala de aula estão na pasta neo4j-worldcupr.
 
-Copy the contents of the following files into your Neo4j browser window one after the other and run them:
+* [Creates](neo4j-worldcup/exemplos_create_sala.cyp)
+* [Consultas simples](neo4j-worldcup/exemplos_consultas_sala.cyp)
+* [Alteração e consultas Avançadas](neo4j-worldcup/exemplos_alteracao_e_consulta.cyp)
 
-* [loadMatches.cyp](data/import/loadMatches.cyp)
-* [loadSquads.cyp](data/import/loadSquads.cyp)
-* [loadLineUps.cyp](data/import/loadLineUps.cyp)
-* [loadEvents.cyp](data/import/loadEvents.cyp)
-* [connectAdjacentWorldCups.cyp](data/import/connectAdjacentWorldCups.cyp)
-* [addGeoLocations.cyp](data/import/addGeoLocations.cyp)
 
-## Querying the data set
-
-We're collating interesting queries you can write against the data set in [queries.cyp](queries.cyp). Try some of them out!
-
-## Getting the raw data
-
-There are 3 steps to getting the data ready for Neo4j:
-
-* Find the pages we want to download e.g. all the matches
-
-````
-ruby scripts/find_matches.rb > data/matches.csv
-````
-
-* Download those pages
-
-````
-# reads from data/matches.csv and downloads into data/matches/
-ruby scripts/download_matches.rb
-````
-
-* Create CSV files that we can use with Neo4j's LOAD CSV
-
-````
-# creates data/import/matches.csv
-ruby scripts/to_csv
-````
+## Licença
+Creative Commons. Reuse à vontade! 
