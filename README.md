@@ -5,7 +5,7 @@ Material de apoio utilizado na disciplina de Bancos de Dados II do Curso de Ciê
 ## Instalando o Neo4j 
 Baixe o Neo4J  do website (http://www.neo4j.org/download) e siga as instruções. Caso você ainda tenha alguma dúvida veja o vídeo abaixo
 
-[![ScreenShot](https://raw.github.com/thiagonobrega/bdog/blob/master/imagens/youtube.png)](https://www.youtube.com/watch?v=ANLZsH52kBA)
+[![Youtube](https://raw.github.com/thiagonobrega/bdog/master/imagens/youtube.png)](https://www.youtube.com/watch?v=ANLZsH52kBA)
 
 ## Utilizando os dados do Exemplo da sala de aula
 Em sala de aula nos adaptamos os dados de  [Mark Needham]( https://github.com/mneedham), com os dados das Copas do Mundo.
