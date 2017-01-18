@@ -5,9 +5,9 @@ Material de apoio utilizado na disciplina de Bancos de Dados II do Curso de Ciê
 ## Instalando o Neo4j 
 Baixe o Neo4J  do website (http://www.neo4j.org/download) e siga as instruções. Caso você ainda tenha alguma dúvida veja o vídeo abaixo
 
-(https://www.youtube.com/watch?v=ANLZsH52kBA)
+[![ScreenShot](https://raw.github.com/thiagonobrega/bdog/blob/master/imagens/youtube.png)](https://www.youtube.com/watch?v=ANLZsH52kBA)
 
-## Exemplo  
+## Utilizando os dados do Exemplo da sala de aula
 Em sala de aula nos adaptamos os dados de  [Mark Needham]( https://github.com/mneedham), com os dados das Copas do Mundo.
 
 Os dados estão organizados de acordo com a Figura abaixo: 
@@ -15,6 +15,7 @@ Os dados estão organizados de acordo com a Figura abaixo:
 
 ### Carregando os dados na sua instancia Neo4J
 Abra o navegador e acessa o [console web](http://localhost:7474) do Neo4J
+
 #### Limpe a Base de Dados
 ````
 MATCH (n)-[r]-() DELETE n,r;
@@ -56,7 +57,9 @@ Execute os comandos dos arquivos abaixo no Neo4J.
 * [02 - Dados das Seleções](neo4j-worldcup/2-oadSquads.cyp)
 * [03 - Dados das Convocações](neo4j-worldcup/3-loadLineUps.cyp)
 * [04 - Dados dos eventos](neo4j-worldcup/4-loadEvents.cyp)
-IMPORTANTE : Para resolver os exercícios da Lista 02 é necessário executar a criação do relacionamento :VENCEU
+
+*IMPORTANTE :* Para resolver os exercícios da Lista 02 é necessário executar a criação do relacionamento :VENCEU
+
 ````
 MATCH (visitante)<-[:TIME_VISITANTE]-(partida:Partida)-[:TIME_DA_CASA]->(tcasa)
 MATCH (partida)<-[:COMPOSTA_POR]-(copa)
@@ -81,4 +84,4 @@ As consultas utilizadas em sala de aula estão na pasta neo4j-worldcupr.
 
 
 ## Licença
-Creative Commons. Reuse à vontade! 
+Creative Commons. Reuse à vontade!
