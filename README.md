@@ -54,7 +54,7 @@ Cada linha deve ser executada individualmente
 Execute os comandos dos arquivos abaixo no Neo4J.
 
 * [01 - Dados das Partidas](neo4j-worldcup/1-loadMatches.cyp)
-* [02 - Dados das Seleções](neo4j-worldcup/2-oadSquads.cyp)
+* [02 - Dados das Seleções](neo4j-worldcup/2-loadSquads.cyp)
 * [03 - Dados das Convocações](neo4j-worldcup/3-loadLineUps.cyp)
 * [04 - Dados dos eventos](neo4j-worldcup/4-loadEvents.cyp)
 
