@@ -12,18 +12,18 @@ FOREACH(n IN (CASE WHEN toInt(partida.placar_visitante) > toInt(partida.placar_c
 	MERGE (selecaoVisitante)-[:VENCEU {placar: partida.placar_visitante + "-" + partida.placar_casa}]->(selecaoCasa)
 );
 
-// Find teams that beat each other in the same world cups
 // Quais seleções se enfrentaram duas vezes em uma copa, onde na primeira partida a vitória foi de uma seleção, e na segunda partida vitória foi da outra seleção?
-
 MATCH (s:Selecao) -[:VENCEU]-> (s2) -[:VENCEU]-> (s)
 RETURN s
-//consulta  para o tipo
+//gabarito
+//http://sports.stackexchange.com/questions/5465/have-two-teams-ever-played-each-other-twice-in-the-same-world-cup
+
+// consulta anterior scom mais detalhes
 MATCH (s:Selecao) -[:VENCEU]-> (s2) -[:VENCEU]-> (s)
 MATCH (partida)-[r1:TIME_DA_CASA|TIME_VISITANTE]->(p1)-[:CONVOCOU]->(s),
 	  (partida)-[r2:TIME_DA_CASA|TIME_VISITANTE]->(p2)-[:CONVOCOU]->(s2)
 MATCH (copa)-[:COMPOSTA_POR]->(partida)
 RETURN s,partida,s2,r1,r2,copa
 
-//gabarito
-//http://sports.stackexchange.com/questions/5465/have-two-teams-ever-played-each-other-twice-in-the-same-world-cup
+
 

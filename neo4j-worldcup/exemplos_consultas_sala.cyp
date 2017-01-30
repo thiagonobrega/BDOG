@@ -36,14 +36,13 @@ RETURN p, selecao, ano, copa, jogador
 
 //
 // Jogadores que não foram utilizados nas copas
-MATCH (a)-[:JOGOU_POR]->(b) 
-WHERE not (a-[:TITULAR|:RESERVA]->()) 
-RETURN b,count(a) 
-order by count(a) desc
+//MATCH (a)-[:JOGOU_POR]->(b) 
+//WHERE not ( (a)-[:TITULAR|:RESERVA]->()) 
+//RETURN b,count(a) 
+//order by count(a) desc
 
 
 //TIMES QUE ESTIVERAM QUE HOSPEDARAM E FORAM PARA A FINAL
-
 MATCH (fase:Fase {nome: "Final"})<-[:NA_FASE]-(partida),
 	   (copa:CopaDoMundo)-[:COMPOSTA_POR]->(partida),
        (partida)<-[:JOGOU_EM]-(pais:Pais),
